@@ -26,7 +26,11 @@ class Recipe(recipe.Recipe):
     def prepare(self):
         if self.config.target_platform in [Platform.WINDOWS]:
             self.library_type = LibraryType.SHARED
-
+        if self.config.target_platform in [Platform.DARWIN]:
+            if self.config.target_arch == Architecture.ARM64:
+                self.configure_options += ' -DCMAKE_OSX_ARCHITECTURES:STRING=arm64 '
+            elif self.config.target_arch == Architecture.X86_64:
+                self.configure_options += ' -DCMAKE_OSX_ARCHITECTURES:STRING=x86_64 '
     def post_install(self):
         deps = ['-lm']
         libtool_la = LibtoolLibrary('openjp2', 2, 1, None, self.config.libdir,

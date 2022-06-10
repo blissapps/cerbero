@@ -39,6 +39,11 @@ class Recipe(recipe.Recipe):
             self.library_type = LibraryType.SHARED
         else:
             self.library_type = LibraryType.STATIC
+        if self.config.target_platform in [Platform.DARWIN]:
+            if self.config.target_arch == Architecture.ARM64:
+                self.configure_options += ' -DCMAKE_OSX_ARCHITECTURES:STRING=arm64 '
+            elif self.config.target_arch == Architecture.X86_64:
+                self.configure_options += ' -DCMAKE_OSX_ARCHITECTURES:STRING=x86_64 '
 
     async def extract(self):
         await super().extract()

@@ -39,6 +39,11 @@ class Recipe(recipe.Recipe):
             self.configure_options += ' -DANDROID_NDK=1 '
             self.append_env('CXXFLAGS', '-frtti')
         self.configure_options += ' -DZLIB_ROOT=%s ' % self.config.prefix
+        if self.config.target_platform in [Platform.DARWIN]:
+            if self.config.target_arch == Architecture.ARM64:
+                self.configure_options += ' -DCMAKE_OSX_ARCHITECTURES:STRING=arm64 '
+            elif self.config.target_arch == Architecture.X86_64:
+                self.configure_options += ' -DCMAKE_OSX_ARCHITECTURES:STRING=x86_64 '
 
     async def install(self):
         await super(recipe.Recipe, self).install()
